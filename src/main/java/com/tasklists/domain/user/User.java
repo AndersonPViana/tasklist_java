@@ -1,11 +1,8 @@
 package com.tasklists.domain.user;
 
-import com.tasklists.domain.task.Task;
 import com.tasklists.dtos.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.List;
 
 @Entity(name = "users")
 @Table(name = "users")
@@ -23,8 +20,6 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
-    @OneToMany()
-    private List<Task> tasks;
 
     public User(UserDTO data) {
         this.firstName = data.firstName();
