@@ -4,7 +4,7 @@ import com.tasklists.domain.user.User;
 import com.tasklists.dtos.AuthenticationDTO;
 import com.tasklists.dtos.LoginResponseDTO;
 import com.tasklists.dtos.UserDTO;
-import com.tasklists.infra.security.TokenService;
+import com.tasklists.services.TokenService;
 import com.tasklists.repositories.UserRepository;
 import com.tasklists.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,7 +24,7 @@ public class UserController {
     private UserRepository repository;
 
     @Autowired
-    TokenService tokenService;
+    private TokenService tokenService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
