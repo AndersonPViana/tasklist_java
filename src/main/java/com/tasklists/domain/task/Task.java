@@ -19,7 +19,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private Boolean state;
+    private boolean state;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

@@ -4,6 +4,8 @@ import com.tasklists.domain.user.User;
 import com.tasklists.dtos.UserDTO;
 import com.tasklists.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,8 +25,8 @@ public class UserService {
         return this.repository.findUserById(id).orElseThrow(() -> new Exception("User not found"));
     }
 
-    public void saveUser(User user) {
-        this.repository.save(user);
+    public UserDetails findByEmail(String email) {
+        return this.repository.findByEmail(email);
     }
 
 }
