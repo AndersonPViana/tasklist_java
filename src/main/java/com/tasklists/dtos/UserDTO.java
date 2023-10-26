@@ -1,4 +1,6 @@
 package com.tasklists.dtos;
 
-public record UserDTO(String firstName, String lastName, String email, String password) {
+import com.tasklists.domain.user.UserRole;
+
+public record UserDTO(String firstName, String lastName, String email, String password, UserRole role) {
 }
