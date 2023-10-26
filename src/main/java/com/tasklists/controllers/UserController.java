@@ -1,11 +1,18 @@
 package com.tasklists.controllers;
 
 import com.tasklists.domain.user.User;
+import com.tasklists.dtos.AuthenticationDTO;
+import com.tasklists.dtos.LoginResponseDTO;
 import com.tasklists.dtos.UserDTO;
+import com.tasklists.infra.security.TokenService;
+import com.tasklists.repositories.UserRepository;
 import com.tasklists.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,15 +21,31 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping
+    @Autowired
+    private UserRepository repository;
+
+    @Autowired
+    TokenService tokenService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @PostMapping("/register")
     public ResponseEntity<User> createUser(@RequestBody UserDTO user) {
-        User newUser = this.userService.createUser(user);
-        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+        if(this.repository.findByEmail(user.email()) != null) return ResponseEntity.badRequest().build();
+        this.userService.createUser(user);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) throws Exception {
-        User user = this.userService.findUserById(id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    @PostMapping("/login")
+    public ResponseEntity loginUser(@RequestBody AuthenticationDTO data) {
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
+        var auth = this.authenticationManager.authenticate(usernamePassword);
+
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
+
 }
